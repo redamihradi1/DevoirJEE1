@@ -26,6 +26,7 @@ public class SalleRest {
     // ajouter une salle
     @PostMapping("/ajouter")
     public Salle addSalle(@RequestBody Salle salle){
+        System.out.println("Ajout d'une salle avec succes");
         return  salleRepo.save(salle);
     }
 
@@ -40,6 +41,7 @@ public class SalleRest {
             s.setNbrChaise(salle.getNbrChaise());
             s.setStatut(salle.getStatut());
             s.setType(salle.getType());
+            System.out.println("Modification d'une salle avec succes");
             return  salleRepo.save(s);
         }
         return null;
@@ -50,6 +52,7 @@ public class SalleRest {
     public void deleteSalle(@PathVariable Long id){
         Salle salle = salleRepo.findById(id).get();
         if (salle != null){
+            System.out.println("Suppression d'une salle avec succes");
             salleRepo.delete(salle);
         }
     }
@@ -63,31 +66,38 @@ public class SalleRest {
             SalleDTO salleDTO = myMapper.fromSalle(s.get(i));
             salles.add(salleDTO);
         }
+        System.out.println("Affichage de toute les salles avec succes");
         return salles;
     }
 
     // rechercher par id
     @GetMapping("/chercherparid/{id}")
     public Salle findSalleId(@PathVariable long id){
+        System.out.println("fin by id d'une salle avec succes");
         return salleRepo.findById(id).get();
     }
 
-    // chercher par type   ---- Ne marche pas a debeugger ----
+
+    // chercher par type
     @GetMapping("/chercherpartype/{type}")
-    public Salle findSalleType(@PathVariable Type type){
+    public List<Salle> findSalleType(@PathVariable Type type){
         if (salleRepo.findByType(type) != null ){
             return salleRepo.findByType(type);
         }
         return null;
     }
 
-    // chercher par statut ---- Ne marche pas a debeugger ---
-    @GetMapping("/chercherpartype/{statut}")
-    public Salle findSalleStatut(@PathVariable Boolean statut){
-        if (salleRepo.findByStatut(statut) != null ){
-            return salleRepo.findByStatut(statut);
+    // chercher par statut
+    @GetMapping("/chercherparstatut/{statut}")
+    public List<Salle> findSalleStatut(@PathVariable Boolean statut){
+
+        if (statut == true){
+            return salleRepo.findByStatutTrue();
         }
-        return null;
+        return salleRepo.findByStatutFalse();
+
+
+
     }
 
 
